@@ -1,7 +1,7 @@
 var jwt = require('../index');
 var expect = require('chai').expect;
 var jws = require('jws');
-var PS_SUPPORTED = require('../lib/psSupported');
+var PS_SUPPORTED = true;
 const {generateKeyPairSync} = require("crypto");
 
 describe('signing a token asynchronously', function() {

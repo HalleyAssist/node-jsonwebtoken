@@ -1,7 +1,7 @@
 var jwt = require('../index');
 var expect = require('chai').expect;
 var fs = require('fs');
-var PS_SUPPORTED = require('../lib/psSupported');
+var PS_SUPPORTED = true;
 
 describe('schema', function() {
 

@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var jwt = require('../index');
 var JsonWebTokenError = require('../lib/JsonWebTokenError');
-var PS_SUPPORTED = require('../lib/psSupported');
+var PS_SUPPORTED = true;
 var expect = require('chai').expect;
 
 

@@ -4,7 +4,7 @@ const TokenExpiredError = require('./lib/TokenExpiredError');
 const decode = require('./decode');
 const timespan = require('./lib/timespan');
 const validateAsymmetricKey = require('./lib/validateAsymmetricKey');
-const PS_SUPPORTED = require('./lib/psSupported');
+const PS_SUPPORTED = true;
 const jws = require('jws');
 const {KeyObject, createSecretKey, createPublicKey} = require("crypto");
 

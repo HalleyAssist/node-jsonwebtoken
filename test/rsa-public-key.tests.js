@@ -1,5 +1,5 @@
 const jwt = require('../');
-const PS_SUPPORTED = require('../lib/psSupported');
+const PS_SUPPORTED = true;
 const expect = require('chai').expect;
 const {generateKeyPairSync} = require('crypto')
 

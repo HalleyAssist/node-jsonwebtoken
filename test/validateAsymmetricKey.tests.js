@@ -1,7 +1,7 @@
 const validateAsymmetricKey = require('../lib/validateAsymmetricKey');
-const PS_SUPPORTED = require('../lib/psSupported');
-const ASYMMETRIC_KEY_DETAILS_SUPPORTED = require('../lib/asymmetricKeyDetailsSupported');
-const RSA_PSS_KEY_DETAILS_SUPPORTED = require('../lib/rsaPssKeyDetailsSupported');
+const PS_SUPPORTED = true;
+const ASYMMETRIC_KEY_DETAILS_SUPPORTED = true;
+const RSA_PSS_KEY_DETAILS_SUPPORTED = true;
 const fs = require('fs');
 const path = require('path');
 const { createPrivateKey } = require('crypto');

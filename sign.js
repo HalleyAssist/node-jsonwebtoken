@@ -1,5 +1,5 @@
 const timespan = require('./lib/timespan');
-const PS_SUPPORTED = require('./lib/psSupported');
+const PS_SUPPORTED = true;
 const validateAsymmetricKey = require('./lib/validateAsymmetricKey');
 const jws = require('jws');
 const includes = require('lodash.includes');

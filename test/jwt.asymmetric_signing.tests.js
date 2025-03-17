@@ -1,5 +1,5 @@
 const jwt = require('../index');
-const PS_SUPPORTED = require('../lib/psSupported');
+const PS_SUPPORTED = true;
 const fs = require('fs');
 const path = require('path');
 
