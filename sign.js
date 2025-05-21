@@ -1,26 +1,24 @@
 const timespan = require('./lib/timespan');
-const PS_SUPPORTED = true;
 const validateAsymmetricKey = require('./lib/validateAsymmetricKey');
 const jws = require('jws');
-const includes = require('lodash.includes');
 const isBoolean = require('lodash.isboolean');
 const isInteger = require('lodash.isinteger');
 const isNumber = require('lodash.isnumber');
 const isPlainObject = require('lodash.isplainobject');
 const isString = require('lodash.isstring');
-const once = require('lodash.once');
 const { KeyObject, createSecretKey, createPrivateKey } = require('crypto')
 
-const SUPPORTED_ALGS = ['RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512', 'HS256', 'HS384', 'HS512', 'none'];
-if (PS_SUPPORTED) {
-  SUPPORTED_ALGS.splice(3, 0, 'PS256', 'PS384', 'PS512');
+const SUPPORTED_ALGS = ['RS256', 'RS384', 'RS512'];
+
+function validAlgorithm(alg) {
+  return SUPPORTED_ALGS.includes(alg)
 }
 
 const sign_options_schema = {
   expiresIn: { isValid: function(value) { return isInteger(value) || (isString(value) && value); }, message: '"expiresIn" should be a number of seconds or string representing a timespan' },
   notBefore: { isValid: function(value) { return isInteger(value) || (isString(value) && value); }, message: '"notBefore" should be a number of seconds or string representing a timespan' },
   audience: { isValid: function(value) { return isString(value) || Array.isArray(value); }, message: '"audience" must be a string or array' },
-  algorithm: { isValid: includes.bind(null, SUPPORTED_ALGS), message: '"algorithm" must be a valid string enum value' },
+  algorithm: { isValid: validAlgorithm, message: '"algorithm" must be a valid string enum value' },
   header: { isValid: isPlainObject, message: '"header" must be an object' },
   encoding: { isValid: isString, message: '"encoding" must be a string' },
   issuer: { isValid: isString, message: '"issuer" must be a string' },
@@ -226,28 +224,10 @@ module.exports = function (payload, secretOrPrivateKey, options, callback) {
 
   const encoding = options.encoding || 'utf8';
 
-  if (typeof callback === 'function') {
-    callback = callback && once(callback);
-
-    jws.createSign({
-      header: header,
-      privateKey: secretOrPrivateKey,
-      payload: payload,
-      encoding: encoding
-    }).once('error', callback)
-      .once('done', function (signature) {
-        // TODO: Remove in favor of the modulus length check before signing once node 15+ is the minimum supported version
-        if(!options.allowInsecureKeySizes && /^(?:RS|PS)/.test(header.alg) && signature.length < 256) {
-          return callback(new Error(`secretOrPrivateKey has a minimum key size of 2048 bits for ${header.alg}`))
-        }
-        callback(null, signature);
-      });
-  } else {
-    let signature = jws.sign({header: header, payload: payload, secret: secretOrPrivateKey, encoding: encoding});
-    // TODO: Remove in favor of the modulus length check before signing once node 15+ is the minimum supported version
-    if(!options.allowInsecureKeySizes && /^(?:RS|PS)/.test(header.alg) && signature.length < 256) {
-      throw new Error(`secretOrPrivateKey has a minimum key size of 2048 bits for ${header.alg}`)
-    }
-    return signature
+  let signature = jws.sign({header: header, payload: payload, secret: secretOrPrivateKey, encoding: encoding});
+  // TODO: Remove in favor of the modulus length check before signing once node 15+ is the minimum supported version
+  if(!options.allowInsecureKeySizes && /^(?:RS|PS)/.test(header.alg) && signature.length < 256) {
+    throw new Error(`secretOrPrivateKey has a minimum key size of 2048 bits for ${header.alg}`)
   }
+  return signature
 };
